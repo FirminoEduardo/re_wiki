@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+venv/
+env/
+__pycache__/
+*.pyc
+bin/
+include/
+lib/
+lib64/
+
+# Build outputs
+dist/
+build/
+*.o
+*.so
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+pyvenv.cfg
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+
+# Data and Databases
+jogos.parquet
+*.sqlite
+*.db
+data/
+raw_data/
+
+# Testing and Notebook caches
+.pytest_cache/
+htmlcov/
+.coverage
+.ipynb_checkpoints/
