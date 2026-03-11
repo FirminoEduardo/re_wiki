@@ -63,9 +63,15 @@ if (response.status_code == 200):
                     continue
                 games.append({  "nome": game.get('name', []), 
                             "data_lancamento": game.get('released', []),
-                            "Gênero": game.get('genres', []),
-                            "Plataforma": game.get('platforms', []),                                "Publicadora": [item['name'] for item in publishers],
-                            "Desenvolvedora": [item['name'] for item in developers]
+                            "Gênero": [item['name'] for item in game.get('genres', [])],
+                            "Plataforma": [item['platform']['name'] for item in game.get('platforms', [])],
+                            "Publicadora": [item['name'] for item in publishers],
+                            "Desenvolvedora": [item['name'] for item in developers],
+                            "Nota média - usuários": game.get('rating', None),
+                            "Quantidade de avaliações": game.get('ratings_count', None),
+                            "Metacritic": game.get('metacritic', None),
+                            "Tempo médio de jogo": game.get('playtime', None),
+                            "Classificação etária": (game.get('esrb_rating') or {}).get('name', None)
                             })
                     
                 print(f"Processando: {game['name']}")
