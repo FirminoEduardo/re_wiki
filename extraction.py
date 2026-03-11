@@ -2,6 +2,7 @@ import pandas as pd
 import requests
 import json
 import os
+from datetime import date
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,6 +20,24 @@ params = {
 response = requests.get(BASE_URL, params=params)
 
 games = []
+palavras_excluir = ["demo",
+"beta",
+"teaser",
+"1-shot",
+"vr",
+"kitchen",
+"siege",
+"onslaught",
+"4th survivor",
+"episode",
+"arcade",
+"collection",
+"bundle",
+"archives",
+"demake",
+".NET"]
+capcom = "Capcom"
+hoje = date.today()
 
 if (response.status_code == 200):
     data = response.json()
@@ -26,21 +45,29 @@ if (response.status_code == 200):
 
     while (data['next']):
         for game in data.get("results", []):
+            if (game.get('released') != None and date.fromisoformat(game.get('released', None)) > hoje):
+                continue
+
+            if any(palavra.lower() in game['name'].lower() for palavra in palavras_excluir):
+                continue
+            
             games_id = game.get('id', [])
             detail = requests.get(f"https://api.rawg.io/api/games/{games_id}", params=params)
+            
             if (detail.status_code == 200):
                 detail_data = detail.json()
                 publishers = detail_data['publishers']
                 developers = detail_data['developers']
 
+                if not (capcom.lower() in [item['name'].lower() for item in publishers] or capcom.lower() in [item['name'].lower() for item in developers]):
+                    continue
                 games.append({  "nome": game.get('name', []), 
                             "data_lancamento": game.get('released', []),
                             "Gênero": game.get('genres', []),
-                            "Plataforma": game.get('platforms', []),
-                            "Publicadora": [item['name'] for item in publishers],
+                            "Plataforma": game.get('platforms', []),                                "Publicadora": [item['name'] for item in publishers],
                             "Desenvolvedora": [item['name'] for item in developers]
-                        })
-                
+                            })
+                    
                 print(f"Processando: {game['name']}")
             else:
                 print("Não foi possível acessar ID's")
